@@ -18,7 +18,8 @@ This tool provides an ics file that contains definitions of Azure DevOps sprints
 
 1. All calendars should be displayed in single calendar grid now. You can distinguish between particular calendar events by color.
 
-    ![Screenshot 2023-01-09 112811](https://user-images.githubusercontent.com/5574525/211292433-3e4c98d4-206d-4633-8d84-34f015369dcc.png)
+    ![Screenshot 2023-01-09 112811](https://user-images.githubusercontent.com/5574525/211321320-6633fa6c-207b-424c-b8c4-d0af2e5f9165.png)
+
 
 
 
