@@ -13,6 +13,7 @@ using Ical.Net.Serialization;
 using System.Collections.Generic;
 using Calendar = Ical.Net.Calendar;
 using LazyCache;
+using Ical.Net;
 
 namespace WhatSprintItIsCalendar
 {
@@ -54,26 +55,30 @@ namespace WhatSprintItIsCalendar
 
         private static byte[] GetCalendarBytes()
         {
-            var ical = new CalendarSerializer().SerializeToString(GetCalendar());
+            var serializer = new ComponentSerializer();
+            var ical = serializer.SerializeToString(GetCalendar());
             return Encoding.UTF8.GetBytes(ical);
         }
 
         private static Calendar GetCalendar()
         {
-            var events = GetEvents();         
-
-            var cal = new Calendar
+            var calendar = new Calendar
             {
                 Method = "PUBLISH",
-                ProductId = "https://github.com/onetocny/WhatSprintItIsCalendar"
+                ProductId = "-//github.com/onetocny/WhatSprintIsItCalendar//EN",
+                Version = "2.0",
+                Properties =
+                {
+                    new CalendarProperty("X-PUBLISHED-TTL", RefreshDuration),
+                    new CalendarProperty("X-WR-CALNAME", "What Sprint Is It"),
+                    new CalendarProperty("REFRESH-INTERVAL;VALUE=DURATION", RefreshDuration)
+                }
             };
 
-            cal.Events.AddRange(events);
-            cal.AddProperty("X-PUBLISHED-TTL", RefreshDuration);
-            cal.AddProperty("REFRESH-INTERVAL;VALUE=DURATION", RefreshDuration);
-            cal.AddProperty("X-WR-CALNAME", "What Sprint It Is");
+            var events = GetEvents();
+            calendar.Events.AddRange(events);
 
-            return cal;
+            return calendar;
         }
 
         private static IEnumerable<CalendarEvent> GetEvents()
