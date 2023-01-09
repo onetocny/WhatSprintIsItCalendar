@@ -40,11 +40,10 @@ namespace WhatSprintItIsCalendar
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             var bytes = GetCalendarBytesFromCache();
-            var stream = new MemoryStream(bytes);
 
-            return new FileStreamResult(stream, calendarHeaderType)
+            return new FileContentResult(bytes, calendarHeaderType)
             {
-                FileDownloadName = CalendarFileName
+                FileDownloadName = CalendarFileName,
             };
         }
 
