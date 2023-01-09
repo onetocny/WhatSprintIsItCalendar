@@ -10,11 +10,13 @@ This tool provides an ics file that contains definitions of Azure DevOps sprints
 
 1. Open calendar view in Outlook and right click on the calendar group where you would like to add sprint calendar. Select Add calendar -> From Internet. The dialog asking for URL should show up. Fill in the URL of calendar https://whatsprintisitcalendar.azurewebsites.net/api/calendar.
 
-    ![Screenshot 2023-01-09 112259](https://user-images.githubusercontent.com/5574525/211287096-c36960c2-b108-41c2-b2e0-3cc1487af655.png)
+    ![Screenshot 2023-01-09 112259](https://user-images.githubusercontent.com/5574525/211322226-4747e885-6333-4ab1-af97-1fcbe64bed4b.png)
 
+    
 1. Once you have the calendar imported. You can overlay it with other calendar. Select all calendar that you want to overlay. Then right click on them and select overlay.
 
-    ![Screenshot 2023-01-09 112321](https://user-images.githubusercontent.com/5574525/211287299-209ac2fd-f4c8-49ac-9fe4-fe50bb1f385b.png)
+    ![Screenshot 2023-01-09 112321](https://user-images.githubusercontent.com/5574525/211322277-db2747c6-7ead-46a4-9f53-416919558919.png)
+
 
 1. All calendars should be displayed in single calendar grid now. You can distinguish between particular calendar events by color.
 
