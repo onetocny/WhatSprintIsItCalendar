@@ -23,12 +23,16 @@ namespace WhatSprintItIsCalendar
 
         private static readonly string Zone = TimeZoneInfo.Utc.Id;
         private static readonly DateTime FirstSprintStartDate = DateTime.Parse("2010-08-14T00:00:00.000Z");
-        private static readonly TimeSpan SprintDuration = TimeSpan.FromDays(7);
-        private static readonly MediaTypeHeaderValue calendarHeaderType = new MediaTypeHeaderValue("text/calendar");
+        private static readonly TimeSpan OneWeek = TimeSpan.FromDays(7);
+        private static readonly MediaTypeHeaderValue CalendarHeaderType = new MediaTypeHeaderValue("text/calendar");
 
         private const int WeeksPerSprint = 3;
         private const string RefreshDuration = "P1W"; // one week, see https://www.rfc-editor.org/rfc/rfc2445#section-4.3.6
         private const string CalendarFileName = "whatsprintisit.ics";
+        private const string ProductId = "-//github.com/onetocny/WhatSprintIsItCalendar//EN";
+        private const string Version2_0 = "2.0";
+        private const string PublishMethod = "PUBLISH";
+        private const string CalendarName = "What Sprint Is It";
 
         [FunctionName(nameof(WhatSprintIsItCalendar))]
         public static IActionResult Run
@@ -41,7 +45,7 @@ namespace WhatSprintItIsCalendar
 
             var bytes = GetCalendarBytesFromCache();
 
-            return new FileContentResult(bytes, calendarHeaderType)
+            return new FileContentResult(bytes, CalendarHeaderType)
             {
                 FileDownloadName = CalendarFileName,
             };
@@ -49,7 +53,7 @@ namespace WhatSprintItIsCalendar
 
         private static byte[] GetCalendarBytesFromCache()
         {
-            return Cache.GetOrAdd(nameof(GetCalendarBytes), GetCalendarBytes, DateTimeOffset.UtcNow + SprintDuration);
+            return Cache.GetOrAdd(nameof(GetCalendarBytes), GetCalendarBytes, DateTimeOffset.UtcNow + OneWeek);
         }
 
         private static byte[] GetCalendarBytes()
@@ -63,13 +67,13 @@ namespace WhatSprintItIsCalendar
         {
             var calendar = new Calendar
             {
-                Method = "PUBLISH",
-                ProductId = "-//github.com/onetocny/WhatSprintIsItCalendar//EN",
-                Version = "2.0",
+                Method = PublishMethod,
+                ProductId = ProductId,
+                Version = Version2_0,
                 Properties =
                 {
                     new CalendarProperty("X-PUBLISHED-TTL", RefreshDuration),
-                    new CalendarProperty("X-WR-CALNAME", "What Sprint Is It"),
+                    new CalendarProperty("X-WR-CALNAME", CalendarName),
                     new CalendarProperty("REFRESH-INTERVAL;VALUE=DURATION", RefreshDuration)
                 }
             };
@@ -95,13 +99,13 @@ namespace WhatSprintItIsCalendar
                     var e = new CalendarEvent
                     {
                         Summary = $"Sprint {sprint} Week {week}",
-                        Uid = $"M{sprint:D3}_{week}",
+                        Uid = $"{sprint:D3}_{week}",
                         Start = new CalDateTime(start, Zone),
-                        Duration = SprintDuration,
+                        Duration = OneWeek,
                         IsAllDay = true
                     };
                     events.Add(e);
-                    start = start + SprintDuration;
+                    start = start + OneWeek;
                 }
 
                 sprint++;
