@@ -17,9 +17,10 @@ using Ical.Net;
 
 namespace WhatSprintItIsCalendar
 {
-    public class WhatSprintIsItCalendar
+    public class HttpTriggers
     {
         private readonly IAppCache _cache;
+        private readonly ILogger<HttpTriggers> _log;
 
         private static readonly string Zone = TimeZoneInfo.Utc.Id;
         private static readonly DateTime FirstSprintStartDate = DateTime.Parse("2010-08-14T00:00:00.000Z");
@@ -34,19 +35,16 @@ namespace WhatSprintItIsCalendar
         private const string PublishMethod = "PUBLISH";
         private const string CalendarName = "What Sprint Is It";
 
-        public WhatSprintIsItCalendar(IAppCache cache)
+        public HttpTriggers(IAppCache cache, ILogger<HttpTriggers> log)
         {
             _cache = cache;
+            _log = log;
         }
 
-        [FunctionName(nameof(WhatSprintIsItCalendar))]
-        public IActionResult Run
-        (
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "calendar")] HttpRequest req,
-            ILogger log
-        )
+        [FunctionName(nameof(GetCalendar))]
+        public IActionResult GetCalendar([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "calendar")] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            _log.LogInformation("C# HTTP trigger function processed a request.");
 
             var bytes = GetCalendarBytesFromCache();
 
