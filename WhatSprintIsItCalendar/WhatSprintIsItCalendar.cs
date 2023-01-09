@@ -16,7 +16,7 @@ using LazyCache;
 
 namespace WhatSprintItIsCalendar
 {
-    public static class WhatSprintItIsCalendar
+    public static class WhatSprintIsItCalendar
     {
         private static readonly IAppCache Cache = new CachingService();
 
@@ -27,9 +27,9 @@ namespace WhatSprintItIsCalendar
 
         private const int WeeksPerSprint = 3;
         private const string RefreshDuration = "P1W"; // one week, see https://www.rfc-editor.org/rfc/rfc2445#section-4.3.6
-        private const string CalendarFileName = "whatsprintitis.ics";
+        private const string CalendarFileName = "whatsprintisit.ics";
 
-        [FunctionName(nameof(WhatSprintItIsCalendar))]
+        [FunctionName(nameof(WhatSprintIsItCalendar))]
         public static IActionResult Run
         (
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "calendar")] HttpRequest req,
