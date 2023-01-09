@@ -5,6 +5,16 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhatSprintIsItCalendar", "WhatSprintIsItCalendar\WhatSprintIsItCalendar.csproj", "{AE813B1C-C669-47F0-A5F6-143A07A5EAD3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02C35ABD-7F62-423B-B7E9-0D5CFBA1F465}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{9DF7D128-C37A-4F16-9494-7D38E3C3CA40}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\azure-functions-app-dotnet.yml = .github\workflows\azure-functions-app-dotnet.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
