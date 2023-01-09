@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Calendar = Ical.Net.Calendar;
 using LazyCache;
 using Ical.Net;
+using Microsoft.Extensions.Options;
 
 namespace WhatSprintItIsCalendar
 {
@@ -21,24 +22,22 @@ namespace WhatSprintItIsCalendar
     {
         private readonly IAppCache _cache;
         private readonly ILogger<HttpTriggers> _log;
+        private readonly CalendarOptions _options;
 
         private static readonly string Zone = TimeZoneInfo.Utc.Id;
         private static readonly DateTime FirstSprintStartDate = DateTime.Parse("2010-08-14T00:00:00.000Z");
         private static readonly TimeSpan OneWeek = TimeSpan.FromDays(7);
         private static readonly MediaTypeHeaderValue CalendarHeaderType = new MediaTypeHeaderValue("text/calendar");
 
-        private const int WeeksPerSprint = 3;
-        private const string RefreshDuration = "P1W"; // one week, see https://www.rfc-editor.org/rfc/rfc2445#section-4.3.6
-        private const string CalendarFileName = "whatsprintisit.ics";
         private const string ProductId = "-//github.com/onetocny/WhatSprintIsItCalendar//EN";
         private const string Version2_0 = "2.0";
         private const string PublishMethod = "PUBLISH";
-        private const string CalendarName = "What Sprint Is It";
 
-        public HttpTriggers(IAppCache cache, ILogger<HttpTriggers> log)
+        public HttpTriggers(IAppCache cache, ILogger<HttpTriggers> log, IOptions<CalendarOptions> options)
         {
             _cache = cache;
             _log = log;
+            _options = options.Value;
         }
 
         [FunctionName(nameof(GetCalendar))]
@@ -50,7 +49,7 @@ namespace WhatSprintItIsCalendar
 
             return new FileContentResult(bytes, CalendarHeaderType)
             {
-                FileDownloadName = CalendarFileName,
+                FileDownloadName = _options.CalendarFileName,
             };
         }
 
@@ -59,14 +58,14 @@ namespace WhatSprintItIsCalendar
             return _cache.GetOrAdd(nameof(GetCalendarBytes), GetCalendarBytes, DateTimeOffset.UtcNow + OneWeek);
         }
 
-        private static byte[] GetCalendarBytes()
+        private byte[] GetCalendarBytes()
         {
             var serializer = new ComponentSerializer();
             var ical = serializer.SerializeToString(GetCalendar());
             return Encoding.UTF8.GetBytes(ical);
         }
 
-        private static Calendar GetCalendar()
+        private Calendar GetCalendar()
         {
             var calendar = new Calendar
             {
@@ -75,9 +74,9 @@ namespace WhatSprintItIsCalendar
                 Version = Version2_0,
                 Properties =
                 {
-                    new CalendarProperty("X-PUBLISHED-TTL", RefreshDuration),
-                    new CalendarProperty("X-WR-CALNAME", CalendarName),
-                    new CalendarProperty("REFRESH-INTERVAL;VALUE=DURATION", RefreshDuration)
+                    new CalendarProperty("X-PUBLISHED-TTL", _options.RefreshDuration),
+                    new CalendarProperty("X-WR-CALNAME", _options.CalendarName),
+                    new CalendarProperty("REFRESH-INTERVAL;VALUE=DURATION", _options.RefreshDuration)
                 }
             };
 
@@ -87,7 +86,7 @@ namespace WhatSprintItIsCalendar
             return calendar;
         }
 
-        private static IEnumerable<CalendarEvent> GetEvents()
+        private IEnumerable<CalendarEvent> GetEvents()
         {
             var events = new List<CalendarEvent>();
             var start = FirstSprintStartDate;
@@ -97,7 +96,7 @@ namespace WhatSprintItIsCalendar
 
             while (start < oneYearFromNow)
             {
-                for (var week = 1; week <= WeeksPerSprint; week++)
+                for (var week = 1; week <= _options.WeeksPerSprint; week++)
                 {
                     var e = new CalendarEvent
                     {
