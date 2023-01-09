@@ -12,32 +12,50 @@ using Ical.Net.DataTypes;
 using Ical.Net.Serialization;
 using System.Collections.Generic;
 using Calendar = Ical.Net.Calendar;
+using LazyCache;
 
 namespace WhatSprintItIsCalendar
 {
     public static class WhatSprintItIsCalendar
     {
+        private static readonly IAppCache Cache = new CachingService();
+
         private static readonly string Zone = TimeZoneInfo.Utc.Id;
         private static readonly DateTime FirstSprintStartDate = DateTime.Parse("2010-08-14T00:00:00.000Z");
         private static readonly TimeSpan SprintDuration = TimeSpan.FromDays(7);
+        private static readonly MediaTypeHeaderValue calendarHeaderType = new MediaTypeHeaderValue("text/calendar");
 
         private const int WeeksPerSprint = 3;
         private const string RefreshDuration = "P1W"; // one week, see https://www.rfc-editor.org/rfc/rfc2445#section-4.3.6
+        private const string CalendarFileName = "whatsprintitis.ics";
 
         [FunctionName(nameof(WhatSprintItIsCalendar))]
-        public static IActionResult Run(
+        public static IActionResult Run
+        (
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "calendar")] HttpRequest req,
-            ILogger log)
+            ILogger log
+        )
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            var ical = new CalendarSerializer().SerializeToString(GetCalendar());
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(ical));
+            var bytes = GetCalendarBytesFromCache();
+            var stream = new MemoryStream(bytes);
 
-            return new FileStreamResult(stream, new MediaTypeHeaderValue("text/calendar"))
+            return new FileStreamResult(stream, calendarHeaderType)
             {
-                FileDownloadName = "whatsprintitis.ics"
+                FileDownloadName = CalendarFileName
             };
+        }
+
+        private static byte[] GetCalendarBytesFromCache()
+        {
+            return Cache.GetOrAdd(nameof(GetCalendarBytes), GetCalendarBytes, DateTimeOffset.UtcNow + SprintDuration);
+        }
+
+        private static byte[] GetCalendarBytes()
+        {
+            var ical = new CalendarSerializer().SerializeToString(GetCalendar());
+            return Encoding.UTF8.GetBytes(ical);
         }
 
         private static Calendar GetCalendar()
@@ -47,7 +65,7 @@ namespace WhatSprintItIsCalendar
             var cal = new Calendar
             {
                 Method = "PUBLISH",
-                ProductId = "github.com/onetocny/whatsprintisitcalendar"
+                ProductId = "https://github.com/onetocny/WhatSprintItIsCalendar"
             };
 
             cal.Events.AddRange(events);
