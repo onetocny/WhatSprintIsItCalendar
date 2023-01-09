@@ -18,7 +18,8 @@ An ics file provider of Azure DevOps sprints. As [WhatSprintIs.It](https://whats
 
 1. All calendars should be displayed in single calendar grid now. You can distinguish between particular calendar events by color.
 
-    ![Screenshot 2023-01-09 112811](https://user-images.githubusercontent.com/5574525/211287602-c7d28284-2f41-469b-a117-fa6bd1f08d2e.png)
+    ![Screenshot 2023-01-09 112811](https://user-images.githubusercontent.com/5574525/211292433-3e4c98d4-206d-4633-8d84-34f015369dcc.png)
+
 
 
 ## TODO
