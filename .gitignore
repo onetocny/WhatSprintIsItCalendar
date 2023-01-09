@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/WhatSprintIsItCalendar/Properties/ServiceDependencies/WhatSprintIsItCalendar - Zip Deploy/storage1.arm.json
+/WhatSprintIsItCalendar/Properties/serviceDependencies.WhatSprintIsItCalendar - Zip Deploy.json
