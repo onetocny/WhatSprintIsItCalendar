@@ -17,9 +17,9 @@ using Ical.Net;
 
 namespace WhatSprintItIsCalendar
 {
-    public static class WhatSprintIsItCalendar
+    public class WhatSprintIsItCalendar
     {
-        private static readonly IAppCache Cache = new CachingService();
+        private readonly IAppCache _cache;
 
         private static readonly string Zone = TimeZoneInfo.Utc.Id;
         private static readonly DateTime FirstSprintStartDate = DateTime.Parse("2010-08-14T00:00:00.000Z");
@@ -34,8 +34,13 @@ namespace WhatSprintItIsCalendar
         private const string PublishMethod = "PUBLISH";
         private const string CalendarName = "What Sprint Is It";
 
+        public WhatSprintIsItCalendar(IAppCache cache)
+        {
+            _cache = cache;
+        }
+
         [FunctionName(nameof(WhatSprintIsItCalendar))]
-        public static IActionResult Run
+        public IActionResult Run
         (
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "calendar")] HttpRequest req,
             ILogger log
@@ -51,9 +56,9 @@ namespace WhatSprintItIsCalendar
             };
         }
 
-        private static byte[] GetCalendarBytesFromCache()
+        private byte[] GetCalendarBytesFromCache()
         {
-            return Cache.GetOrAdd(nameof(GetCalendarBytes), GetCalendarBytes, DateTimeOffset.UtcNow + OneWeek);
+            return _cache.GetOrAdd(nameof(GetCalendarBytes), GetCalendarBytes, DateTimeOffset.UtcNow + OneWeek);
         }
 
         private static byte[] GetCalendarBytes()
