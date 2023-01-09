@@ -12,7 +12,7 @@ An ics file provider of Azure DevOps sprints. As [WhatSprintIs.It](https://whats
 
     ![Screenshot 2023-01-09 112259](https://user-images.githubusercontent.com/5574525/211287096-c36960c2-b108-41c2-b2e0-3cc1487af655.png)
 
-1. Once you have the calendar imported. You can overlay it other calendar. Select all calendar that you want to overlay. Then right click on them and select overlay.
+1. Once you have the calendar imported. You can overlay it with other calendar. Select all calendar that you want to overlay. Then right click on them and select overlay.
 
     ![Screenshot 2023-01-09 112321](https://user-images.githubusercontent.com/5574525/211287299-209ac2fd-f4c8-49ac-9fe4-fe50bb1f385b.png)
 
