@@ -26,8 +26,8 @@ This tool provides an ics file that contains definitions of Azure DevOps sprints
 
 
 ## TODO
-- Clean up repo
-- Load settings (such as first sprint date, sprint length) from configuration,
+- ~~Clean up repo~~
+- ~~Load settings (such as first sprint date, sprint length) from configuration~~,
 - Generate ics file recurently, store it in blob and then provide it through API
-- Setup CI/CD in GitHub Actions
+- ~~Setup CI/CD in GitHub Actions~~
 - Support request parameters to specify the time range of result file
