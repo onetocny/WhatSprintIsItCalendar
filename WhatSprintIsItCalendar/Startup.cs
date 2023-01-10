@@ -4,6 +4,7 @@ using LazyCache;
 using Microsoft.Extensions.Configuration;
 using WhatSprintItIsCalendar;
 using Ical.Net.Serialization;
+using Microsoft.Extensions.Logging;
 
 [assembly: FunctionsStartup(typeof(WhatSprintIsItCalendar.Startup))]
 
@@ -33,7 +34,8 @@ namespace WhatSprintIsItCalendar
                 var calendarProvider = p.GetRequiredService<CalendarFileProvider>();
                 var cache = p.GetRequiredService<IAppCache>();
                 var dateTimeProvider = p.GetRequiredService<IDateTimeProvider>();
-                return new CalendarFileProviderCache(calendarProvider, cache, dateTimeProvider);
+                var log = p.GetRequiredService<ILogger<CalendarFileProviderCache>>();
+                return new CalendarFileProviderCache(calendarProvider, cache, dateTimeProvider, log);
             });
 
             builder.Services.AddSingleton<ICalendarFactory, CalendarFactory>();

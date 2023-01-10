@@ -8,7 +8,7 @@
       }
     },
     "logLevel": {
-      "WhatSprintItIsCalendar.HttpTriggers": "Information"
+      "WhatSprintItIsCalendar.CalendarFileProviderCache": "Information"
     }
   }
 }
