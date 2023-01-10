@@ -24,8 +24,6 @@ namespace WhatSprintItIsCalendar
         private readonly ILogger<HttpTriggers> _log;
         private readonly CalendarOptions _options;
 
-        private static readonly string Zone = TimeZoneInfo.Utc.Id;
-        private static readonly DateTime FirstSprintStartDate = DateTime.Parse("2010-08-14T00:00:00.000Z");
         private static readonly TimeSpan OneWeek = TimeSpan.FromDays(7);
         private static readonly MediaTypeHeaderValue CalendarHeaderType = new MediaTypeHeaderValue("text/calendar");
 
@@ -89,7 +87,7 @@ namespace WhatSprintItIsCalendar
         private IEnumerable<CalendarEvent> GetEvents()
         {
             var events = new List<CalendarEvent>();
-            var start = FirstSprintStartDate;
+            var start = _options.FirstSprintStartDate;
             var sprint = 1;
             var oneYearFromNow = DateTime.UtcNow.AddYears(1);
 
@@ -102,7 +100,7 @@ namespace WhatSprintItIsCalendar
                     {
                         Summary = $"Sprint {sprint} Week {week}",
                         Uid = $"{sprint:D3}_{week}",
-                        Start = new CalDateTime(start, Zone),
+                        Start = new CalDateTime(start, _options.CalendarTimeZone),
                         Duration = OneWeek,
                         IsAllDay = true
                     };
